@@ -14,7 +14,7 @@ def main():
 
         # 创建并初始化结果文件
         f = open(file_name_2[file], 'a', encoding='utf-8')
-        f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃风弃光电量\n')
+        f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃光电量，弃风电量\n')
         f.close()
 
         data = pd.read_csv(file_name_1[file])
@@ -29,8 +29,11 @@ def main():
         # 光伏发电量
         data_light = data['光伏购电量'].tolist()
 
-        # 弃风弃电量
-        e_abandon = data['弃风弃光电量'].tolist()
+        # 弃光电量
+        e_abandon_light = data['弃光电量'].tolist()
+
+        # 弃风电量
+        e_abandon_wind = data['弃风电量'].tolist()
 
         # 电网购电量
         e_buy = data['电网购电量'].tolist()
@@ -47,13 +50,17 @@ def main():
         # 初始化一个电池电量的列表
         battery_capacity = []
 
-        for i in range(len(e_abandon)):
-            abandon = e_abandon[i]
+        for i in range(len(e_abandon_wind)):
+            abandon_light = e_abandon_light[i]
+            abandon_win = e_abandon_wind[i]
+            abandon = [abandon_win , abandon_light]
             buy = e_buy[i]
-            if abandon > 0:
-                capacity, temp = battery.battery_charge(abandon)
-                battery_capacity.append(capacity)
-                e_abandon_buy.append(temp)
+            if sum(abandon) > 0:
+                if abandon_light > abandon_win:
+                    # 如果弃电量中光伏弃电量大于风电弃电量
+                    capacity, temp = battery.battery_charge(abandon)
+                    battery_capacity.append(capacity)
+                    e_abandon_buy.append(temp)
             elif buy > 0:
                 capacity, temp = battery.battery_charge(0 - buy)
                 battery_capacity.append(capacity)

@@ -1,9 +1,12 @@
-import battery_system
 import pandas as pd
+import battery_system
+import generate_electricity
+import os
+from sko.PSO import PSO
+from sko.GA import GA
 
-def battery_cost(x, y):
-    p = x
-    contain = y
+def battery_cost(x):
+    p, contain = x
     data = pd.read_csv('问题1：（1）B.csv')
     data = data.dropna()
 
@@ -17,7 +20,8 @@ def battery_cost(x, y):
     data_light = data['光伏购电量'].tolist()
 
     # 弃风弃电量
-    e_abandon = data['弃风弃光电量'].tolist()
+    e_abandon_win = data['弃风电量'].tolist()
+    e_abandon_light = data['弃光电量'].tolist()
 
     # 电网购电量
     e_buy = data['电网购电量'].tolist()
@@ -68,5 +72,20 @@ def battery_cost(x, y):
 
     return total_cost
 
+def main():
+    # PSO粒子群优化，优化储能系统的功率和容量配置
+    # 调整PSO的参数，以增强粒子的探索能力
+    pso = PSO(func=battery_cost, dim=2, pop=100, max_iter=200, lb=[0, 0], ub=[100, 1000], w=0.9, c1=0.8, c2=0.8)
+    pso.run()
+    print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
+
+    # # 遗传算法，优化储能系统的功率和容量配置
+    # # 调整GA的参数，以增强种群的多样性
+    # ga = GA(func=battery_cost, n_dim=2, size_pop=100, max_iter=200, lb=[0, 0], ub=[100, 1000], precision=1e-7)
+    #
+    # best_x, best_y = ga.run()
+    #
+    # print('best_x is ', best_x, 'best_y is', best_y)
+
 if __name__ == '__main__':
-    print(battery_cost(50, 100))
+    main()

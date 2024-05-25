@@ -3,7 +3,7 @@ from matplotlib.ticker import MultipleLocator
 from matplotlib import pyplot as plt
 import pandas as pd
 
-def draw_pic(y1, y2, y3, file_name):
+def draw_pic(y1, y2, y3, file_name, x_label, y_label, title):
     """
 
     :param y1:
@@ -34,9 +34,9 @@ def draw_pic(y1, y2, y3, file_name):
     plt.plot(y3, 'g-', label='C园区')
 
     # 设置图表标题和轴标签
-    plt.title('各园区弃风弃光电量与时间的关系')
-    plt.xlabel('时间')
-    plt.ylabel('弃风弃光电量')
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
 
     # 显示图例
     plt.legend()

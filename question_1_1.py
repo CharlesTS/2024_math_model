@@ -32,9 +32,9 @@ def main():
 
     # 各个园区的数据计算
     # 总成本， 电网购电量， 弃电量， 光伏发电量， 风电发电量
-    cost_A, e_buy_A, e_abandon_A, e_light_A, e_win_A = generate_electricity.no_battery_system_cost(data_A, data_light_A, 0)
-    cost_B, e_buy_B, e_abandon_B, e_light_B, e_win_B = generate_electricity.no_battery_system_cost(data_B, 0, data_win_B)
-    cost_C, e_buy_C, e_abandon_C, e_light_C, e_win_C = generate_electricity.no_battery_system_cost(data_C, data_light_C, data_win_C)
+    cost_A, e_buy_A, e_abandon_light_A, e_abandon_win_A, e_light_A, e_win_A = generate_electricity.no_battery_system_cost(data_A, data_light_A, 0)
+    cost_B, e_buy_B, e_abandon_light_B, e_abandon_win_B, e_light_B, e_win_B = generate_electricity.no_battery_system_cost(data_B, 0, data_win_B)
+    cost_C, e_buy_C, e_abandon_light_C, e_abandon_win_C, e_light_C, e_win_C = generate_electricity.no_battery_system_cost(data_C, data_light_C, data_win_C)
 
     # 总购电成本计算
     cost_A = sum(cost_A)
@@ -54,26 +54,27 @@ def main():
 
         # 创建并初始化结果文件
         f = open(i, 'a', encoding='utf-8')
-        f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃风弃光电量\n')
+        f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃光电量,弃风电量\n')
         f.close()
 
     # 逐行写入各园区的数据
     for i in range(len(data_A)):
-        generate_electricity.write_file(data_A[i], e_win_A[i], e_light_A[i], e_buy_A[i], e_abandon_A[i], file_name[0])
+        generate_electricity.write_file(data_A[i], e_win_A[i], e_light_A[i], e_buy_A[i], e_abandon_light_A[i],  e_abandon_win_A[i], file_name[0])
 
     for i in range(len(data_B)):
-        generate_electricity.write_file(data_B[i], e_win_B[i], e_light_B[i], e_buy_B[i], e_abandon_B[i], file_name[1])
+        generate_electricity.write_file(data_B[i], e_win_B[i], e_light_B[i], e_buy_B[i], e_abandon_light_B[i],  e_abandon_win_B[i], file_name[1])
 
     for i in range(len(data_C)):
-        generate_electricity.write_file(data_C[i], e_win_C[i], e_light_C[i], e_buy_C[i], e_abandon_C[i], file_name[2])
+        generate_electricity.write_file(data_C[i], e_win_C[i], e_light_C[i], e_buy_C[i], e_abandon_light_C[i], e_abandon_win_C[i], file_name[2])
 
     # 打印各园区的总供电成本和单位电量平均供电成本
-    print(f'A园区：电网购电量：{sum(e_buy_A)}, 光伏发电量：{sum(e_light_A)}, 风电发电量：{sum(e_win_A)}, 弃电量：{sum(e_abandon_A)}, 总供电成本：{cost_A}, 单位电量平均供电成本：{cu_A}')
-    print(f'B园区：电网购电量：{sum(e_buy_B)}, 光伏发电量：{sum(e_light_B)}, 风电发电量：{sum(e_win_B)}, 弃电量：{sum(e_abandon_B)}, 总供电成本：{cost_B}, 单位电量平均供电成本：{cu_B}')
-    print(f'C园区：电网购电量：{sum(e_buy_C)}, 光伏发电量：{sum(e_light_C)}, 风电发电量：{sum(e_win_C)}, 弃电量：{sum(e_abandon_C)}, 总供电成本：{cost_C}, 单位电量平均供电成本：{cu_C}')
+    print(f'A园区：电网购电量：{sum(e_buy_A)}, 光伏发电量：{sum(e_light_A)}, 风电发电量：{sum(e_win_A)}, 弃光电量：{sum(e_abandon_light_A)}, 弃风电量：{sum(e_abandon_win_A)}, 总供电成本：{cost_A}, 单位电量平均供电成本：{cu_A}')
+    print(f'B园区：电网购电量：{sum(e_buy_B)}, 光伏发电量：{sum(e_light_B)}, 风电发电量：{sum(e_win_B)}, 弃光电量：{sum(e_abandon_light_B)}, 弃风电量：{sum(e_abandon_win_B)}, 总供电成本：{cost_B}, 单位电量平均供电成本：{cu_B}')
+    print(f'C园区：电网购电量：{sum(e_buy_C)}, 光伏发电量：{sum(e_light_C)}, 风电发电量：{sum(e_win_C)}, 弃光电量：{sum(e_abandon_light_C)}, 弃风电量：{sum(e_abandon_win_C)}, 总供电成本：{cost_C}, 单位电量平均供电成本：{cu_C}')
 
     # 绘制折线图
-    draw_pic.draw_pic(e_abandon_A, e_abandon_B, e_abandon_C, '各园区弃风弃光电量与时间的关系-问题1-1.png')
+    draw_pic.draw_pic(e_abandon_light_A, e_abandon_light_B, e_abandon_light_C, '各园区弃光电量与时间的关系-问题1-1.png', '时间', '弃光电量', '弃光电量与时间的关系')
+    draw_pic.draw_pic(e_abandon_win_A, e_abandon_win_B, e_abandon_win_C, '各园区弃风电量与时间的关系-问题1-1.png', '时间', '弃风电量', '弃风电量与时间的关系')
 
 if __name__ == '__main__':
     main()

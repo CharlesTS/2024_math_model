@@ -14,17 +14,19 @@ class BatterySystem:
     def battery_charge(self, charge):
         init_battery = self.battery  # 初始电量
         init_charge = charge  # 初始充放电量
+        charge = sum(charge)    # 总充(放)电量
 
         # 判断：如果电池电量在SOC的范围内，开始充放电
         # charge > 0 为充电，charge < 0 为放电
         if self.judge_battery() == 1:
-            init_battery = self.battery # 初始电量
+            # init_battery = self.battery # 初始电量
             init_charge = charge    # 初始充放电量
 
             charge, judge_power_num = self.judge_power(charge)  # 充进去/放出来的电量，超出额定功率判断标志
 
             if charge > 0:
-                self.battery += charge * self.battery_transfer
+                if init_charge[0] > 0:
+                    self.battery += init_charge[0] * self.battery_transfer
             else:
                 self.battery += charge / self.battery_transfer
 
@@ -33,14 +35,14 @@ class BatterySystem:
         # 返回值：多出的充电电量，返回为弃电量
         if self.judge_battery() == 'up':
             self.battery = self.battery_contain * self.battery_SOC[1]
-            return self.battery, init_charge - charge
+            return self.battery, init_charge - charge + self.battery_p
 
         # 放电情况，超出额定值
         # 判断：如果电池的容量低于10%，设定电池电量为额定的最低容量
         # 返回值：少的放电电量，返回为电网购电量（负数）
         if self.judge_battery() == 'down':
             self.battery = self.battery_contain * self.battery_SOC[0]
-            return self.battery, init_charge - charge
+            return self.battery, init_charge - charge - self.battery_p
 
         if self.judge_battery() == 1:
             return self.battery, 0
@@ -64,10 +66,10 @@ class BatterySystem:
 
     def judge_power(self, charge):
         if charge > self.battery_p:
-            return self.battery_p * self.battery_transfer, 1
+            return self.battery_p, 1
 
         elif charge < -self.battery_p:
-            return -(self.battery_p * self.battery_transfer), 1
+            return -self.battery_p, 1
 
         else:
             return charge, 0
@@ -76,3 +78,5 @@ class BatterySystem:
     def battery_cost(self):
         return (self.battery_p * 800 + self.battery_contain * 1800) / self.battery_age
 
+    def current_capacity(self):
+        return self.battery
