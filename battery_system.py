@@ -14,19 +14,16 @@ class BatterySystem:
     def battery_charge(self, charge):
         init_battery = self.battery  # 初始电量
         init_charge = charge  # 初始充放电量
-        charge = sum(charge)    # 总充(放)电量
 
         # 判断：如果电池电量在SOC的范围内，开始充放电
         # charge > 0 为充电，charge < 0 为放电
         if self.judge_battery() == 1:
-            # init_battery = self.battery # 初始电量
-            init_charge = charge    # 初始充放电量
-
+            # 初始充放电量
             charge, judge_power_num = self.judge_power(charge)  # 充进去/放出来的电量，超出额定功率判断标志
 
             if charge > 0:
-                if init_charge[0] > 0:
-                    self.battery += init_charge[0] * self.battery_transfer
+                if init_charge > 0:
+                    self.battery += init_charge * self.battery_transfer
             else:
                 self.battery += charge / self.battery_transfer
 
@@ -73,7 +70,6 @@ class BatterySystem:
 
         else:
             return charge, 0
-
 
     def battery_cost(self):
         return (self.battery_p * 800 + self.battery_contain * 1800) / self.battery_age

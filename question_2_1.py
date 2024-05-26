@@ -24,7 +24,7 @@ def main():
         data_light.append(l_a + l_c)
 
     # 调用generate_electricity模块中的函数计算成本等指标
-    cost, e_buy, e_abandon, e_light, e_win = generate_electricity.no_battery_system_cost(data_target, data_light, data_win)
+    cost, e_buy, e_abandon_light, e_abandon_win, e_light, e_win = generate_electricity.no_battery_system_cost(data_target, data_light, data_win)
     cu = sum(cost) / sum(data_target)  # 修改为sum(data_target)而不是sum(data)
 
     # 检查并删除已有的结果文件
@@ -33,12 +33,12 @@ def main():
 
     # 创建并初始化结果文件
     f = open('问题2：（1）.csv', 'a', encoding='utf-8')
-    f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃风弃光电量\n')
+    f.write('目标功率,风电购电量,光伏购电量,电网购电量,弃光电量,弃风电量\n')
     f.close()
     for i in range(len(data_target)):
-        generate_electricity.write_file(data_target[i], e_win[i], e_light[i], e_buy[i], e_abandon[i], '问题2：（1）.csv')
+        generate_electricity.write_file(data_target[i], e_win[i], e_light[i], e_buy[i], e_abandon_light[i], e_abandon_win[i], '问题2：（1）.csv')
 
-    print(f'联合园区：电网购电量：{sum(e_buy)}, 光伏发电量：{sum(e_light)}, 风电发电量：{sum(e_win)}, 弃电量：{sum(e_abandon)}, 总供电成本：{sum(cost)}, 单位电量平均供电成本：{cu}')
+    print(f'联合园区：电网购电量：{sum(e_buy)}, 光伏发电量：{sum(e_light)}, 风电发电量：{sum(e_win)}, 弃光量：{sum(e_abandon_light)}, 弃风量：{sum(e_abandon_win)}, 总供电成本：{sum(cost)}, 单位电量平均供电成本：{cu}')
 
 if __name__ == '__main__':
     main()

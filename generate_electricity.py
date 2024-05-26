@@ -55,7 +55,7 @@ def judge(pnd, pspw, pspl):
 
 # 未配置储能系统
 # 计算系统总成本以及购电量
-def no_battery_system_cost(data, data_light, data_win,):
+def no_battery_system_cost(data, data_light, data_win):
     """
     计算系统总成本以及各类购电量和弃风弃光电量
 

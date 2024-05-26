@@ -4,7 +4,7 @@ from sko.PSO import PSO
 
 def battery_cost(x):
     p, contain = x
-    data = pd.read_csv('问题1：（1）B.csv')
+    data = pd.read_csv('问题2：（1）.csv')
     data = data.dropna()
 
     # 目标功率
