@@ -111,3 +111,20 @@ def write_file(data, e_win, e_light, e_buy, e_abandon_light, e_abandon_win, file
         data, e_buy, e_abandon_light, e_abandon_win, e_light, e_win = str(data), str(e_buy), str(e_abandon_light),  str(e_abandon_win),str(e_light), str(e_win)
         f.write(f'{data},{e_win},{e_light},{e_buy},{e_abandon_light},{e_abandon_win}\n')
         f.close()
+
+def write_file_1(data, e_win, e_light, e_buy, e_abandon, file_name):
+    """
+    将数据追加写入CSV文件
+
+    :param data: 目标功率
+    :param e_win: 风电购电量
+    :param e_light: 光伏购电量
+    :param e_buy: 电网购电量
+    :param e_abandon: 弃风弃光电量
+    :param file_name: 文件名
+    """
+    with open(file_name, 'a', encoding='utf-8') as f:
+        data, e_buy, e_abandon, e_light, e_win = round(data, 3), round(e_buy, 3), round(e_abandon, 3),round(e_light, 3), round(e_win, 3)
+        data, e_buy, e_abandon, e_light, e_win = str(data), str(e_buy), str(e_abandon),str(e_light), str(e_win)
+        f.write(f'{data},{e_win},{e_light},{e_buy},{e_abandon}\n')
+        f.close()

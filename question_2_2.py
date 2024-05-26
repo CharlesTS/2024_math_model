@@ -79,13 +79,5 @@ def main():
     pso.run()
     print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
-    # # 遗传算法，优化储能系统的功率和容量配置
-    # # 调整GA的参数，以增强种群的多样性
-    # ga = GA(func=battery_cost, n_dim=2, size_pop=100, max_iter=200, lb=[0, 0], ub=[100, 1000], precision=1e-7)
-    #
-    # best_x, best_y = ga.run()
-    #
-    # print('best_x is ', best_x, 'best_y is', best_y)
-
 if __name__ == '__main__':
     main()
